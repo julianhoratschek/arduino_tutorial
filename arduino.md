@@ -42,7 +42,7 @@ Ein paar nützliche grundlegende Referenzen:
 
 Dies ist kein C++ Tutorial. Es wird davon ausgegangen, dass grundlegende Strukturen der Sprache bereits bekannt sind.
 
-Lade Dir die Arduino-IDE herunter und schau Dich ein bisschen im Programm um. Du kannst den Arduino mit deinem PC-USB-Port verbinden
+Lade Dir die Arduino-IDE herunter und schau Dich ein bisschen im Programm um. Du kannst den Arduino mit Deinem PC-USB-Port verbinden
 und unter "Tools &rarr; Board Manager" den Arduino Nano Every auswählen. Die IDE sollte den Großteil der notwendigen Installationen selbst vornehmen.
 
 Auch unter Tools solltest Du den Serial Monitor finden. Öffne diesen und schau rechts oben im Fenster nach der Datenübertragungsrate (nur, wenn
@@ -52,32 +52,33 @@ diesen einfach stehen lassen.
 Links befindet sich die Menüleiste, hier kannst Du unter "Bibliotheken" nach externen Programmbibliotheken suchen, z.B. Code zum Ansteuern von
 externen Komponenten.
 
-Links oben sind ein paar grüne Knöpfe. Von links nach rechts: Der Haken kompiliert Deinen Code lokal und überprüft ihn auf Fehler. Der Pfeil kompiliert den Code und lädt ihn
-auf ein angeschlossenes Arduino hoch. Manchmal tritt hierbei eine Bootloader-Warnung auf (in Rot, sieht gefährlich aus), diese kann jedoch ohne
-Probleme ignoriert werden. Sobald der kompilierte Code hochgeladen ist, wird der Microcontroller sofort beginnen, diesen auszuführen.
-Zuletzt ist noch ein "Debugging"-Symbol dort zu finden, dies ist jedoch nur auf einigen Arduino-Plattformen verfügbar.
+Links oben sind ein paar grüne Knöpfe. Von links nach rechts: Der Haken kompiliert Deinen Code lokal und überprüft ihn auf Fehler. Der Pfeil 
+kompiliert den Code und lädt ihn auf ein angeschlossenes Arduino hoch. Manchmal tritt hierbei eine Bootloader-Warnung auf 
+(in Rot, sieht gefährlich aus), diese kann jedoch ohne Probleme ignoriert werden. Sobald der kompilierte Code hochgeladen ist, 
+wird der Microcontroller sofort beginnen, diesen auszuführen. Zuletzt ist noch ein "Debugging"-Symbol dort zu finden, dies 
+ist jedoch nur auf einigen Arduino-Plattformen verfügbar.
 
 Solltest Du einmal bereits hochgeladenen Code nochmal ganz von vorne ausführen wollen, ohne ihn erneut auf das Gerät zu laden, so kannst Du auf den
 kleinen Knopf etwa in der Mitte des Arduino drücken, dieses setzt alles zurück und beginnt wieder mit der Ausführung bei ```setup()```.
 
 ### Was ist Setup? Und Loop?
 
-Mit der Funktion setup() sind wir schon mitten im Coding. Erstelle eine neue Codedatei in der Arduino-IDE und schau sie Dir an. Eine leere Arduino-Codedatei
+Mit der Funktion ```setup()``` sind wir schon mitten im Coding. Erstelle eine neue Codedatei in der Arduino-IDE und schau sie Dir an. Eine leere Arduino-Codedatei
 (auch "Sketch" genannt, mit der Dateiendung *.ino) hat folgenden Aufbau:
 
 ```C
-void setup() {
+void setup() {         
     
 }
 
-void loop() {
+void loop() {           
     
 }
 ```
 
 Dies sind 2 C++ Funktionen ohne Parameter und ohne Rückgabewert. Die Funktion ```setup()``` wird nur einmalig aufgerufen, 
-wenn der Code ganz neu auf das Gerät geladen wird oder wenn der Reset-Knopf am Gerät ausgelöst wird (oder Spannung am 
-Reset-Pin anliegt oder das Gerät neu eingeschaltet wird). Die ```loop()```-Funktion wird anschließend dauerhaft wiederholt ausgeführt.
+wenn der Code ganz neu auf das Gerät geladen wird oder wenn der Reset-Knopf am Gerät ausgelöst wird (oder Spannung am Reset-Pin
+anliegt oder das Gerät neu eingeschaltet wird). Die ```loop()```-Funktion wird anschließend dauerhaft wiederholt ausgeführt.
 
 In der Datei kannst Du in den Funktionen Code schreiben, Variablen lokal in den Funktionen oder global außerhalb der Funktionen definieren, oder auch eigene
 Funktionen schreiben:
@@ -102,6 +103,8 @@ void loop() {
 
 Das Beispielprogramm definiert eine Globale ```counter``` und setzt sie bei Start des Programmes auf 0. Anschließend wird 
 die Variable in jedem ```loop()``` um 1 herauf gezählt. Wenn sie sodann durch 5 teilbar sein sollte, wird zudem 2 addiert.
+Globalen belegen dauerhaft eine Adresse im Speicher, sind aber sinnvoll, wenn Variablen ihren Wert zwischen zwei Aufrufen
+von ```loop()``` beibehalten sollen.
 
 # Kommunikation
 
@@ -123,7 +126,7 @@ void loop() {
 
 Wir müssen zunächst die Kommunikation mit ```Serial.begin()``` öffnen, als Parameter gibst Du die Datenübertragungsrate an, 
 die Du an dem Serial-Monitor abgelesen hast. Die Zeile ```while(!Serial);``` wartet ab, bis der Monitor erfolgreich verbunden 
-wurde. Meistens ist dies nicht notwendig, geht allerdings sicher, dass wir den Monitor zur Verfügung haben, wenn wir mit 
+wurde. Meistens ist dies nicht notwendig, geht allerdings sicher, dass wir den Monitor zur Verfügung haben, bevor wir mit 
 ```loop()``` starten. Anschließend schreiben wir in jedem Loop "Hello World" auf den Monitor und warten mit ```delay()``` 
 500ms, damit wir auch Zeit haben, die Zeilen zu lesen.
 
@@ -140,7 +143,7 @@ sich einfach aus der Arduino IDE senden, indem etwas in die oberste Zeile des Se
 Mit diesem Vorwissen können wir ein Beispielprogramm konzipieren:
 
 ```C
-String get_input() {                                                        // Benutzerdefinierte Funktion
+String get_input() {                                                        // Benutzerdefinierte Funktion, gibt eine Instanz von String zurück
     while(!Serial.available());                                             // Blockiert das Gerät, bis ein Input im Serial-Port zu finden ist.
     
     String  str = Serial.readString();                                      // Lese einen String ein          
@@ -180,7 +183,7 @@ Hier wird ```Serial.print()``` und ```Serial.println()``` genutzt, um Text auf d
 der Text in doppelten Anführungszeichen geschrieben, manchmal aber auch zusätzlich mit ```String()``` umschlossen. Warum?
 
 C++ unterscheidet zwischen verschiedenen Arten von Strings: Die in den doppelten Anführungszeichen sind C-Strings, im Grunde 
-genommen nur Arrays von bytes im Speicher. Auf diese sind nur schwierig Operatoren anwendbar, sie sind nicht besonders flexibel. 
+genommen nur Arrays von Bytes im Speicher. Auf diese sind nur schwierig Operatoren anwendbar, sie sind nicht besonders flexibel. 
 Allerdings gibt es auch die Klasse ```String```, welche Arduino unabhängig von der C++ stdlib implementiert: Die Klasse bietet 
 die Möglichkeit, mit Strings zu interagieren, sie zu verändern oder auch zu konvertieren. Damit ist die Klasse ```String```
 in etwa das, was in vielen Skriptsprachen (Python, Ruby, Javascript) generell als String gehandelt wird. Dennoch benötigt 
@@ -198,27 +201,31 @@ können fast beliebige Grundtypen stehen, diese werden automatisch in einen Stri
 So können auch mehrere ```+```-Anweisungen aneinandergereiht werden.
 
 ```Serial.print()``` wird hier genutzt, um eine Zahl auszugeben und diese gleichzeitig in eine Binärdarstellung zu übersetzen.
-Dies ist eine Convenience-Funktion: Mit einem optionalen 2. Parameter (BIN, OCT, DEC, HEX) kann ```Serial.print()``` angewiesen 
+Dies ist eine Convenience-Funktion: mit einem optionalen 2. Parameter (BIN, OCT, DEC, HEX) kann ```Serial.print()``` angewiesen 
 werden, eine Zahl, die als erster Parameter übergeben wurde, in das entsprechende System zu konvertieren, bevor sie ausgegeben 
 wird. Wird der 2. Parameter weggelassen ist der Default DEC.
 
-Da ```Serial.readString()``` die Ausführung des Programmes nicht unterstützt, wir aber auf eine Antwort des Serial-Port warten
-müssen, wird in dem Beispiel die Funktion ```get_input()``` geschrieben:
+Da ```Serial.readString()``` lediglich 1ms wartet, ob Daten im Serial-Port zum Auslesen sind, bevor das Programm weiter
+ausgeführt wird, wir aber auf eine Antwort des Serial-Port warten müssen, wird in dem Beispiel die Funktion ```String get_input()```
+geschrieben:
 
 Wird diese aufgerufen, so blockiert sie zunächst das gesamte Gerät, bis im Serial-Port Daten stehen, die durch Arduino ausgelesen 
 werden können: ```while(!Serial.available());```. Dies ist ähnlich zu der bekannten Zeile ```while(!Serial);```, wo wir ebenfalls 
-auf ein Gerät gewartet haben. ```Serial.available()``` gibt eigentlich keinen boolean zurück, sondern die Anzahl der bereitgestellten 
-Byte, da C++ allerdings __0__ als __false__ wertet, kann der Rückgabewert als boolean genutzt werden. Sobald Daten zur Verfügung 
-stehen, liest ```Serial.readString()``` eine komplette Zeile als String-Objekt ein. Wir speichern dieses Objekt und nutzen seine Methode
+auf ein Gerät gewartet haben. ```Serial.available()``` gibt eigentlich keinen Boolean zurück, sondern die Anzahl der bereitgestellten 
+Byte, da C++ allerdings __0__ als __false__ wertet, kann der Rückgabewert als Boolean genutzt werden. Sobald Daten zur Verfügung 
+stehen, liest ```Serial.readString()``` alle gefundenen Daten (für max. 1 ms) als String ein. Wir speichern dieses Objekt und nutzen seine Methode
 ```trim()```, um den mitgelesenen Absatz ("\n") zu entfernen. Anschließend geben wir den String zur weiteren Verarbeitung an unsere 
 aufrufende Funktion zurück.
 
 Weitere Funktionen der Klasse String finden sich [hier](https://www.arduino.cc/reference/en/language/variables/data-types/stringobject/)
 
 > Aufgabe: Schreibe ein Programm, das eingegebene Dezimalzahlen als binär-, octal- und hexadezimalzahl ausgibt.
-> Dafür kann die Funktion get_input() genutzt werden, indem Du sie in Deinen Quellcode kopierst.
+> Dafür kann die Funktion ```get_input()``` genutzt werden, indem Du sie in Deinen Quellcode kopierst.
 
-> Extrauafgabe: Schreibe das Programm so, dass der Benutzer wählen kann, ob die eingegebene Zahl als binär, octal- oder hexadezimalzahl ausgegeben wird.
+String-Objekte lassen sich mit C-Strings über den Vergleichsoperator ```==``` z.B. in ```if```-Abfragen vergleichen. 
+
+> Extrauafgabe: Schreibe das Programm so, dass der Benutzer wählen kann, ob die eingegebene Zahl als binär, octal- oder 
+> hexadezimalzahl ausgegeben wird.
 
 <details>
 <summary>Lösung</summary>
@@ -269,15 +276,14 @@ Nach Erraten oder nach Ablauf der 5 Versuche soll das Spiel von neuem beginnen.
 
 ### One Track Mind
 
-> Schreibe ein Programm, das eine festgelegte Zahl "im Kopf" hat und auf eine Benutzereingabe wartet. 
+> Schreibe ein Programm, das eine festgelegte Zahl "im Kopf" hat und auf eine Benutzereingabe wartet. Nutze __nicht__ die 
+> ```get_input()``` Funktion und blockiere das Gerät __nicht__ mit einer ```while()``` Schleife, bis ein Input erfolgt ist!
 
-Definiere hierfür eine Variable von einem Ganzzahltypen und weise ihr einen Zahlenwert zu. Nutze ```Serial.readString()```,
-um in jedem Loop zu versuchen, einen String einzulesen und in einer Variablen zu speichern. Nutze __nicht__ die ```get_input()``` 
-Funktion und blockiere das Gerät __nicht__ mit einer ```while()``` Schleife, bis ein Input erfolgt ist! Wenn die Funktion 
-keine Daten zum Lesen gefunden hat, wird sie ```""``` zurückgeben. Du kannst dies mittels einer ``if``-Abfrage überprüfen. 
-Sollte etwas eingelesen worden sein, konvertiere es mittels ```.toInt()``` (siehe Beispiel im Vorkapitel) zu einer Zahl und 
-vergleiche sie mit der "ausgedachten" Zahl des Computers. Schreibe mittels ```Serial.println()```, ob die Zahl richtig 
-erraten worden ist oder nicht.
+Programmiertips: Definiere eine Variable von einem Ganzzahltypen und weise ihr einen Zahlenwert zu. Nutze ```Serial.readString()```,
+um in jedem Loop zu versuchen, einen String einzulesen und in einer Variablen zu speichern. Wenn die Funktion keine Daten zum 
+Lesen gefunden hat, wird sie ```""``` zurückgeben. Du kannst dies mittels einer ``if``-Abfrage überprüfen. Sollte etwas eingelesen 
+worden sein, konvertiere es mittels ```.toInt()``` (siehe Beispiel im Vorkapitel) zu einer Zahl und vergleiche sie mit der 
+"ausgedachten" Zahl des Computers. Schreibe mittels ```Serial.println()```, ob die Zahl richtig erraten worden ist oder nicht.
 
 > Als Nächstes soll das Programm mitteilen, ob die Zahl größer, kleiner oder genau die erwartete ist. Gib außerdem aus, was
 > für eine Nummer der Benutzer eingegeben hat.
@@ -297,14 +303,14 @@ void setup() {
 }
 
 void loop() {
-    String      answer = Serial.readString();   // Lese einen String ein, wenn Daten vorliegen, sonst wird nach 1 Sekunde "" eingelesen
+    String      answer = Serial.readString();   // Lese einen String ein, wenn Daten vorliegen, sonst wird nach 1 Millisekunde "" eingelesen
     
     if(answer != "") {                          // Falls etwas eingelesen wurde
         int     user_number = answer.toInt();   // Konvertiere zu Int
         
         Serial.print("Meine Nummer ist ");
         
-        if(user_number > my_number)             // Branching
+        if(user_number > my_number)
             Serial.print("kleiner als ");
         else if(user_number < my_number)
             Serial.print("größer als ");
@@ -319,14 +325,14 @@ void loop() {
 
 ### Zufall
 
-Arduino verfügt über einen eingebauten Pseudo-Random-Number-Generator. Mittels ```random(max)``` kann ein zufälliger Wert 
-zwischen 0 und max-1 generiert werden. Die Funktion kann auch mit einer unteren Schranke als ```random(min, max)``` aufgerufen werden.
+Arduino verfügt über einen eingebauten Pseudo-Random-Number-Generator. Mittels ```random(MAX)``` kann ein zufälliger Wert 
+zwischen 0 und MAX-1 generiert werden. Die Funktion kann auch mit einer unteren Schranke als ```random(MIN, MAX)``` aufgerufen werden.
 
 Da ```random()``` seedabhängig ist, würden wir jedoch bei jedem neuen Durchlauf die gleiche "zufällige" Reihenfolge erhalten. 
-Um dies zu verhindern, kann die Funktion ```randomSeed(n)``` aufgerufen werden, wobei n selbst ein möglichst zufälliger Wert 
+Um dies zu verhindern, kann die Funktion ```randomSeed(N)``` aufgerufen werden, wobei N selbst ein möglichst zufälliger Wert 
 sein sollte. Oftmals wird hierfür z.B. die aktuelle Zeit oder ein Wert einer Hardwarekomponente genommen. Wir können hier 
 die zufällige Spannung an einem unangeschlossenen analogen Pin nehmen. Dies kann mittels ```analogRead(A0)``` erfolgen, 
-um die Spannung an dem A0 Pin abzulesen. Die Funktion ```randomSeed()``` wird am besten in ```setup()``` aufgerufen.
+um die Spannung an dem A0 Pin abzulesen. Die Funktion ```randomSeed()``` wird am besten nur einmalig in ```setup()``` aufgerufen.
 
 > Lass den Arduino in der ```loop()```-Funktion eine zufällige Zahl zwischen 0 und 100 ausdenken, sobald die alte Zahl erraten wurde.
 > Hierfür benötigst Du entweder eine globale Kontrollvariable (z.B. ein Boolean), die beinhaltet, ob eine neue Zahl generiert werden soll,
@@ -378,10 +384,10 @@ void loop() {
 ### Pressure
 
 > Zusätzlich soll der Benutzer nicht unendlich viele Versuche haben. Führe die Variable ```tries``` ein, welche pro Versuch 
-> herabgezählt wird. Wenn sie den Wert 0 erreicht, soll ausgegeben werden, dass der Benutzer verloren hat und eine neue zufällige 
-> Zahl generiert werden, ```tries``` soll dann wieder auf die maximale Versuchszahl gesetzt werden. Ein Fallstrick ist, dass 
-> je nach Implementierung passieren kann, dass eine "Du hast verloren"-Nachricht ausgegeben wird, obwohl mit dem letzten Versuch die
-> korrekte Zahl erraten worden ist. Bedenke diesen Sonderfall.
+> herabgezählt wird. Wenn sie den Wert 0 erreicht, soll ausgegeben werden, dass der Benutzer verloren hat, was die gesuchte Zahl war
+> und eine neue zufällige Zahl generiert werden, ```tries``` soll dann wieder auf die maximale Versuchszahl gesetzt werden. 
+> Ein Fallstrick ist, dass je nach Implementierung passieren kann, dass eine "Du hast verloren"-Nachricht ausgegeben wird, 
+> obwohl mit dem letzten Versuch die korrekte Zahl erraten worden ist. Bedenke diesen Sonderfall.
 
 <details>
 <summary>Lösung</summary>
@@ -444,13 +450,13 @@ void loop() {
 > Dies ist ein Extraabschnitt, der auf Programmiertechnik eingeht
 
 Die aktuelle Implementierung funktioniert und macht, was sie soll. Wir haben aktuell jedoch die gesamte Programmlogik in der 
-```loop()``` Funktion und durch if-Abfragen gestaffelt. Das funktioniert, wird bei komplexeren Projekten schnell unübersichtlich.
+```loop()``` Funktion und durch ```if```-Abfragen gestaffelt. Das funktioniert, wird bei komplexeren Projekten schnell unübersichtlich.
 
 Zwei Programmiertechniken können dabei helfen, das Programm in übersichtliche, "verdauliche" Abschnitte zu gliedern: Zunächst 
 können wir die Sinnabschnitte - Generieren einer zufälligen Zahl, Überprüfen der Versuche und Überprüfen der eingegebenen Nummer - in 
 Funktionen verpacken, um die Lesbarkeit zu verbessern.
 
-> Schreibe die Funktionen ```get_random_number()```, ```check_tries()``` und ```check_number()``` und rufe sie an den entsprechenden Stellen auf.
+> Schreibe die Funktionen ```void get_random_number()```, ```void check_tries()``` und ```void check_number()``` und rufe sie an den entsprechenden Stellen auf.
 
 Eine weitere sinnvolle Möglichkeit, das Programm zu gliedern stellt die sog. State-machine dar: Immer, wenn ein Programm zu 
 bestimmten Zeitpunkten distinkt unterschiedliches Verhalten hat, kann dies als "State" bezeichnet werden. Der State, in dem
@@ -482,7 +488,7 @@ Defines können als Makros gedacht werden, die das Vorkommen des linken Texts du
 
 > Versuche, die State-machine zu implementieren. Der State kann in einer Variablen vom Typen int oder byte gespeichert werden. 
 > Die Werte der States können mittels ```#define STATE_NAME 0``` o.Ä. benannt werden.
-> Zudem könnten die Funktionen ```get_random_number()```, ```check_tries()``` und ```check_number()``` auch States zurückgeben, 
+> Zudem könnten die Funktionen ```byte get_random_number()```, ```byte check_tries()``` und ```byte check_number()``` auch States zurückgeben, 
 > die in der aufrufenden Funktion in eine Globale geschrieben werden, um den Code übersichtlich zu gestalten, auch wenn hierdurch 
 > weniger klar wird, von welchem State in welchen gewechselt wird.
 
@@ -585,7 +591,7 @@ Soll ein Block ausgeführt werden, wenn keine der Optionen auf die Variable zutr
 # Eine Außenwelt
 
 Damit wir nicht nur einfach auf einem schwächeren Prozessor als unserem PC programmieren, sondern coole Komponenten bauen können, 
-müssen wir den Arduino nach außen verbinden. Dies geschieht über die Pins an dem Ardunio. Hierbei ist wichtig, dass ein Pin 
+müssen wir den Arduino nach außen verbinden. Dies geschieht über die Pins an dem Arduino. Hierbei ist wichtig, dass ein Pin 
 mit der richtigen Eigenschaft verbunden wird.
 
 ![Arduino Nano Every Pinout](https://docs.arduino.cc/static/90c04d4cfb88446cafa299787bf06056/ABX00028-pinout.png)
@@ -600,7 +606,7 @@ Grob gibt es:
   - Fast alle analogen Pins können auch als digitale Pins verwendet werden.
 - Digitale Pins
   - Unterscheiden zwischen OUTPUT und INPUT, sowie zwischen LOW und HIGH
-  - Lassen sich im Programmcode mit den Zahlen 2-13 als Parameter z.B. der Funktion ```digitalWrite()``` ansprechen 
+  - Lassen sich im Programmcode mit den Zahlen 2-13 als Parameter z.B. der Funktion ```digitalWrite(2)``` ansprechen 
   - Einige digitale Pins können die Range von analogen Pins über PWN (Pulse Width Manipulation) simulieren
     - Hierbei wird durch die Frequenz einer Rechteckwelle ein spezifischer Wert gesendet
     - Pins, die hierzu in der Lage sind, werden auf dem Pinout-Sheet mit "~" gekennzeichnet
@@ -617,17 +623,18 @@ Grob gibt es:
 Nutze ein Breadboard, um ein Arduino mit einem der Joysticks zu verbinden. Hierbei muss der "B"-Pin des Joysticks mit einem Digitalpin,
 die "X" und "Y"-Pins mit jeweils Analogpins verbunden werden. Die Stromversorgung des Joysticks erfolgt ebenfalls über das Breadboard.
 
-Die Analogpins lassen sich mittels ```analogRead(PIN)``` auslesen, wobei PIN für die Pin-ID A0-A7 steht. Der Rückgabewert ist ein int.
-Der Digitalpin muss in ```setup()``` zunächst auf den Input-Mode gestellt werden, dies kann mittels ```pinMode(PIN_NR, MODE)``` erfolgen,
-wobei PIN_NR die Nummer des Pins von 2 bis 13 (ohne "D") und MODE einer der Werte OUTPUT, INPUT oder INPUT_PULLUP ist. Danach kann der Pin
-beliebig mittels ```digitalRead(PIN_NR)``` ausgelesen werden, welches entweder HIGH oder LOW zurückgibt.
+Die Analogpins lassen sich mittels ```analogRead(PIN)``` auslesen, wobei PIN für die Pin-ID A0-A7 steht. Der Rückgabewert ist ein Integer.
+Im Gegensatz zum Analogpin muss der Digitalpin in ```setup()``` zunächst auf den Input-Mode gestellt werden. Dies kann mittels 
+```pinMode(PIN_NR, MODE)``` erfolgen, wobei PIN_NR die Nummer des Pins von 2 bis 13 (ohne "D") und MODE einer der Werte OUTPUT, 
+INPUT oder INPUT_PULLUP ist. Danach kann der Pin beliebig mittels ```digitalRead(PIN_NR)``` ausgelesen werden, welches entweder 
+HIGH oder LOW zurückgibt.
 
 > Schreibe ein Programm, das kontinuierlich die X und Y-Position des Joysticks ausgibt, sowie informiert, wenn der Joystick gedrückt worden ist.
 
-Gib den verwendeten Pins im Programm mittels ```#define``` direkt am Anfang sprechende Namen (z.B. ```#define X_PIN A2```
+Programmiertips: Gib den verwendeten Pins im Programm mittels ```#define``` direkt am Anfang sprechende Namen (z.B. ```#define X_PIN A2```
 oder ```#define BTN_PIN 4```). Dies vereinfacht auch die Bearbeitung des Codes, falls mal andere Pin-Belegungen genutzt werden sollten.
-```analogRead()``` liest int-Werte direkt ein, welche Du über ```Serial.print()``` mit einem bisschen Extratext ausgeben kannst.
-```digitalRead()``` gibt entweder ```HIGH``` oder ```LOW``` zurück, wobei beides Ganzzahlwerte sind, die ebenfalls ausgegeben werden können.
+```analogRead(AX)``` liest Integerwerte direkt ein, welche Du über ```Serial.print()``` mit einem bisschen Extratext ausgeben kannst.
+```digitalRead(PIN_NR)``` gibt entweder ```HIGH``` oder ```LOW``` zurück, wobei beides Ganzzahlwerte sind, die ebenfalls ausgegeben werden können.
 Vergiss nicht, den Digitalpin in ```setup()``` auf INPUT zu setzen.
 
 > Als Extraaufgabe kannst Du versuchen, den "Gedrückt"-Status zu speichern und sowohl beim Drücken als auch beim Loslassen des Knopfes zu informieren.
@@ -681,17 +688,17 @@ false == !true || 0 || NULL || nullptr
 > der Wert des Joysticks etwas fluktuiert.
 > Hilfreich kann sein, eine "Deadzone" zu definieren, in welcher noch nichts passieren soll.
 
-Definiere am besten eine Funktion ```float with_deadzone(float value)```, welche überprüft, ob ```value``` außerhalb eines
-durch eine globale Variable (z.B. ```float dead_zone = 0.05f```) definierten Zone um den Mittelpunkt der ausgelesenen Werte
+Programmiertips: Definiere am besten eine Funktion ```float with_deadzone(float value)```, welche überprüft, ob ```value``` außerhalb eines
+durch eine globale Variable (z.B. ```float dead_zone = 2.0f```) definierten Zone um den Mittelpunkt der ausgelesenen Werte
 an den Pins liegt. Die Funktion soll nur ```value``` zurückgeben, wenn das zutrifft, ansonsten ```0```.
 
 > Extraaufgabe: Versuche, die Axenbewegungen in dem Datentyp float auf Werte zwischen -1 und 1 zu mappen, wobei 0 die Neutralstellung ist.
 
-Hilfestellung: Das Mapping kann über die Formel: ```new_value = -1.0f + (initial_value * 2.0f) / 1023.0f``` erfolgen, da 
+Programmiertips: Das Mapping kann über die Formel: ```new_value = -1.0f + (initial_value * 2.0f) / 1023.0f``` erfolgen, da 
 wir Werte von 0 bis 1023 auf Werte zwischen -1 und 1 mappen wollen. Die ursprüngliche Formel ist 
 ```new_value = to_start + ((value - from_start) * (to_end - to_start)) / (from_end - from_start)```.
-Schreibe am besten eine Funktion ```float map_axis(float value)```, die den gemappten Wert zurückgibt. Die Funktion sollte
-nicht ```map()``` heißen, da Arduino diese Funktion bereits implementiert, diese jedoch nur für Ganzzahlen funktioniert.
+Schreibe am besten eine Funktion ```float map_axis(float value)```, die den gemappten Wert zurückgibt. Arduino bietet übrigens
+von Hause aus bereits eine ```map()```-Funktion, die allerdings nur für Ganzzahlen funktioniert.
 
 <details>
 <summary>Lösung</summary>
@@ -755,7 +762,7 @@ void setup() {
 }
 
 void loop() {
-    led.clear();                                        // LED-Speicher wird geleert, erwartet neue Daten
+    led.clear();                                        // Setzt alle LEDs auf "aus"
     
     led.setPixelColor(0, led.Color(150, 0, 0));         // Setzt die LED an Position 0 (die 1. LED) auf die Farbe Color(Red, Green, Blue)
     led.show();                                         // Setzt die Änderungen um
@@ -767,18 +774,22 @@ Als Parameter erwartet der Constructor der Klasse die Anzahl der LEDs (können z
 mehrere sein), den digitalen Pin, über den die Kommunikation stattfindet und die Reihenfolge der Datenübertragung (hier RGB, 
 siehe Datenblatt. Es gibt auch beliebige andere Reihenfolgen, je nach Bauart).
 
-In ```setup()``` müssen wir ```.begin()``` aufrufen, damit die Bibliothek initialisiert. Dies muss nicht bei allen Bibliotheken 
+In ```setup()``` müssen wir ```begin()``` aufrufen, damit die Bibliothek initialisiert. Dies muss nicht bei allen Bibliotheken 
 erfolgen, allerdings hat sich die Schreibweise bei Arduino anscheinend oftmals bewährt. Im ```loop()``` setzen wir in jedem 
-Durchlauf die Farbe (redundant) auf ein mittelstarkes Rot: ```clear()``` leert den internen Speicher der LED und lässt sie 
-auf neue Daten warten. ```Color(R, G, B)``` setzt Werte von 0 bis 255 in übertragbare Bytewerte um, während ```setPixelColor(LED_NR, COLOR)``` 
-zunächst die Position der angesteuerten LED im Array (beginnend mit 0 bis N-1) und anschließend den Rückgabewert von ```Color()``` als
-zu übertragende Farbe erwartet. Zum Schluss müssen wir der LED noch sagen, dass die Änderungen umgesetzt werden sollen, dies passiert mit ```show()```.
+Durchlauf die Farbe (redundant) auf ein mittelstarkes Rot: ```clear()``` schaltet alle LEDs, die durch die aufrufende Klasse
+kontrolliert werden, aus. Dieser Schritt ist nicht zwingend notwendig, kann aber besonders beim Arbeiten mit mehreren
+LEDs helfen, mit einem "blanken Zettel" neu anzufangen. ```Color(R, G, B)``` setzt Werte von 0 bis 255 in übertragbare Bytewerte 
+um, während ```setPixelColor(LED_NR, COLOR)``` zunächst die Position der angesteuerten LED im Array (beginnend mit 0 bis N-1) 
+und anschließend den Rückgabewert von ```Color()``` als zu übertragende Farbe erwartet. Dieser Wert kann auch von Hand eingegeben
+werden, es handelt sich hierbei um eine mindestens 3 Byte große Zahl (meist wird ```long``` mit 4 Byte verwendet), deren 
+Bitwerte von links nach rechts zum Einstellen der Farben genutzt werden. Zum Schluss müssen wir der LED noch sagen, dass 
+die Änderungen umgesetzt werden sollen, dies passiert mit ```show()```.
 
 ### Farbenspiel
 
 Arduino bietet die Funktion ```cos()```, welche als Parameter ein float als Winkel in rad. erwartet und den Cosinus als double 
 zwischen -1.0 und 1.0 zurückgibt. Mit dieser Funktion ist es möglich, ein Programm zu entwerfen, das eine LED nacheinander in 
-den Farben Rot, Grün und Blau ein- und ausleuchten lässt. Um die Cosinuswerte auf die Bitwerte 0 bis 255 umzusetzen, kann die 
+den Farben Rot, Grün und Blau ein- und aufleuchten lässt. Um die Cosinuswerte auf die Bitwerte 0 bis 255 umzusetzen, kann die 
 Formel aus der Voraufgabe wieder verwendet werden, um ```byte map_color(float cos_input)``` zu schreiben. An die Cosinusfunktion 
 könnte z.B. eine Counter-Variable vom Typen ```float``` verfüttert werden, die jeden Loop hochgezählt wird (ein guter Abstand 
 ist 0.1f pro Loop). Die Variable sollte als Globale definiert werden, damit sie ihren Wert zwischen den loop()-Aufrufen beibehält.
@@ -819,7 +830,7 @@ void setup() {
 }
 
 void loop() {
-    counter += 0.1;                                     // Counter wird jeden Loop hochgezählt
+    counter += 0.1f;                                    // Counter wird jeden Loop hochgezählt
     colors[current_color] = map_color(-cos(counter));   // Durch -cos(counter) beginnen wir mit dem "niedrigsten" Wert und füttern ihn nach Konvertierung
                                                         // an die aktuelle Farbe
 
@@ -827,8 +838,8 @@ void loop() {
         colors[current_color] = 0;                      // "Housekeeping", setzt verwendete Variablen wieder auf 0
         counter = 0.0f;
 
-        switch(current_color) {                         // State-Progress
-            case RED_STATE:
+        switch(current_color) {                         // State-Progress.
+            case RED_STATE:                             
                 current_color = GREEN_STATE;
                 break;
             case GREEN_STATE:
@@ -837,6 +848,9 @@ void loop() {
             case BLUE_STATE:
                 current_color = RED_STATE;
         }
+        
+        // Das gesamte switch-Statement kann auch durch die mathematische Lösung ersetzt werden:
+        // ++current_color %= 3;                        // Inkremiere current_color und nimm das Ergebnis modulo 3.
     }
     
     led.clear();
@@ -915,9 +929,9 @@ und Blau enthält. Nun wird der Wert der Variablen, die grade "dran" ist stets d
 Muss der State gewechselt werden, so wird ```current_color``` einfach auf das nächste Element zeigen gelassen.
 
 Hierfür wird im Beispiel sog. Zeigerarithmetik genutzt: Auf Zeiger lassen sich fast alle Rechenoperatoren anwenden, auch 
-Inkrement und Dekrement. Hierbei addiert der Zeiger die Größe seines Typs (hier byte) hinzu und zeigt anschließend auf die 
-"neue" Adresse. Da ein Array im Speicher nebeneinander liegende Adressen belegt, können wir hiermit jede Variable im Array 
-```colors``` nacheinander durchlaufen.
+Inkrement und Dekrement. Hierbei addiert der Zeiger ein Byte hinzu und zeigt anschließend auf die "neue" Adresse. Da ein 
+Array im Speicher nebeneinander liegende Adressen belegt, können wir hiermit jede Variable im Array ```colors``` nacheinander 
+durchlaufen.
 
 Es muss nur darauf geachtet werden, dass über einen Zeiger nicht versehentlich ein Speicherbereich verändert wird, der nicht 
 alloziert wurde oder durch einen anderen Programmteil genutzt wird: Daher überprüfen wir im Beispiel mit 
@@ -931,3 +945,171 @@ Wenn z.B. ein Wert an einer falschen Speicheradresse verändert wird, oder versu
 zuzugreifen, deren Gültigkeitsbereich bereits verlassen wurde. Daher werden in modernem C++ oftmals eigens hierfür entworfene Objekte
 (z.B. ```unique_pointer``` oder ```shared_pointer```) verwendet, welche diese Gefahren minimieren. Die meisten Standardbibliotheken 
 von Microcontrollern implementieren diese Klassen jedoch nicht.
+
+# Übungsideen
+
+### Switcheroo
+
+Verbinde einen Joystick und 2 LEDs mit dem Arduino.
+> Erstelle ein Programm, das eine LED auf Rot und eine auf Grün initialisiert. Durch Veränderung in X-Richtung soll nun
+> zwischen den LEDs hin- und hergeschaltet werden können, wobei nur die "aktive" Diode leuchten soll. Durch Änderung der
+> Y-Richtung soll die Leuchtkraft der LED erhöht oder vermindert werden.
+
+Versuche, dies mit nur einer Instanz der Klasse Adafruit_NeoPixel zu verwirklichen, indem Du die beiden LEDs durch ihre
+DOUT und DIN-Pins verbindest. Dann können beide über den gleichen Pin am Arduino gesteuert werden, wenn die Klasse mit
+```Adafruit_NeoPixel  led(2, LED_PIN, NO_RGB);``` initialisiert wird.
+
+Nutze die Funktionen ```float map_axis(float value)```, ```float with_deadzone(float value, float deadzone)``` und 
+```float axis(byte pin, float dead_zone)``` aus der Voraufgabe. Schreibe sie so um, dass die Deadzone nicht als Globale,
+sondern als Parameter übergeben wird. Definiere zur Übersichtlichkeit LED_PIN und BTN_PIN mit den entsprechenden Digitalpins 
+und X_PIN und Y_PIN mit den entsprechenden Analogpins. Eine mögliche Implementierung wäre, mittels 
+```byte colors[2][3] = {{150, 0, 0}, {0, 150, 0}};``` zwei Arrays zu je 3 Byte zu erstellen, welche die Farben für beide 
+LEDs speichern und auf die aktive LED mittels einer int-Variablen zuzugreifen. Zum "Leeren" der LEDs kann ```led.clear()```
+verwendet werden, welche alle LEDs ausschaltet. Die Helligkeit könnte über eine weitere Variable gesteuert werden,
+mit welcher die Farbwerte multipliziert werden. Denke daran, die Helligkeit der LEDs unabhängig voneinander zu steuern.
+
+> Extraaufgabe: Durch Drücken des Joysticks soll die aktive Diode eine zufällige neue Farbe bekommen, irgendwo im RGB-Spektrum.
+> Natürlich soll dies nur beim Drücken passieren, ein kontinuierliches Halten soll nicht zu einer ständigen Farbveränderung führen.
+
+Denke daran, den BTN_PIN mittels ```pinMode()``` auf INPUT zu setzen.
+
+```C
+#include <Adafruit_NeoPixel.h>
+
+#define LED_PIN     4
+
+#define X_PIN       A1
+#define Y_PIN       A2
+#define BTN_PIN     5
+    
+// Konvertiert 0..1023 zu -1..1
+float map_axis(float value) { return -1.0f + (value * 2.0f) / 1023.0f; }
+
+// Gibt 0 zurück, falls die Deadzone nicht verlassen wurde
+float with_deadzone(float value, float dead_zone) { return value > dead_zone || value < -dead_zone ? value : 0.0f; }     
+    
+// Gibt eine Joystickachse von einem Pin zurück
+float axis(byte pin, float dead_zone) { return with_deadzone(map_axis(analogRead(pin)), dead_zone); }
+
+
+Adafruit_NeoPixel       led(2, LED_PIN, NEO_RGB);
+
+byte                    colors[2][3] = {{150, 0, 0}, {0, 150, 0}};                  // 2 3-Byte Arrays, einen für jede LED
+float                   brightness[2] = {1.0f, 1.0f};                               // Helligkeitswerte für die LED
+int                     active_led = 0;                                             // Zeigt an, welche LED aktiv ist
+bool                    btn_pressed = false;                                        // Speichert Knopf-State
+
+void setup() {
+    led.begin();
+    
+    pinMode(BTN_PIN, INPUT);
+}
+
+void loop() {
+    float       x = axis(X_PIN, 0.5f), y = axis(Y_PIN, 0.05f);
+    
+    if(x != 0.0f) {
+        led.clear();
+        active_led ^= 0x01;                                                         // "Flip" active_led zwischen 0 und 1.
+    }
+    
+    if(y != 0.0f)
+        brightness[active_led] = constrain(brightness[active_led] + y * 0.5f, 0.0f, 1.0f);
+    
+    if(btn_pressed != digitalRead(BTN_PIN)) {
+        if((btn_pressd = !btn_pressed)) {
+            for(int i=0; i<3; i++)
+                colors[active_led][i] = random(0, 255);
+            x = 1.0f;
+        }
+    }
+    
+    if(x || y) {
+        led.setPixelColor(active_led, led.Color(colors[active_led][0] * brightness[active_led], 
+                                                colors[active_led][1] * brightness[active_led],
+                                                colors[active_led][2] * brightness[active_led]));
+        led.show();
+    }    
+}
+```
+
+### Immer diese Unterbrechungen
+
+Wir haben jetzt das "Event" des Knopfdrucks selbst gecodet. Allerdings bieten viele Microcontroller die Möglichkeit von sog. "Interrupts":
+Dies sind definierte Funktionen, die auf ein Ereignis hin unabhängig vom Programm aufgerufen werden können. Einige Controller bieten
+Interrupts nur an spezifischen digitalen Pins an, der Arduino Nano Every bietet dies jedoch an jedem digitalen Pin. Das eben geschriebene
+Programm lässt sich mittels Interrupts so umschreiben:
+
+```C
+#include <Adafruit_NeoPixel.h>
+
+#define LED_PIN     4
+
+#define X_PIN       A1
+#define Y_PIN       A2
+#define BTN_PIN     5
+    
+
+float axis(byte pin, float dead_zone) {
+    float   value = -1.0f + (analogRead(pin) * 2.0f) / 1023.0f;
+    return value > dead_zone || value < -dead_zone ? value : 0.0f;
+}
+
+
+Adafruit_NeoPixel       led(2, LED_PIN, NEO_RGB);
+
+byte                    colors[2][3] = {{150, 0, 0}, {0, 150, 0}};                  
+float                   brightness[2] = {1.0f, 1.0f};                              
+int                     active_led = 0;
+
+// Update der aktiven LED-Farbe
+void update_color() {
+    led.setPixelColor(active_led, led.Color(colors[active_led][0] * brightness[active_led], 
+                                            colors[active_led][1] * brightness[active_led],
+                                            colors[active_led][2] * brightness[active_led]));
+    led.show();
+}
+
+// Interrupt-Callback
+void btn_pressed() {
+    for(int i=0; i<3; i++)
+        colors[active_led][i] = random(0, 255);
+    update_color();
+}
+
+void setup() {
+    led.begin();
+    
+    pinMode(BTN_PIN, INPUT);
+    
+    // Interrupt bei rising Edge and BTN_PIN
+    attachInterrupt(digitalPinToInterrupt(BTN_PIN), btn_pressed, RISING);
+}
+
+void loop() {
+    float       x = axis(X_PIN, 0.5f), y = axis(Y_PIN, 0.05f);
+    
+    if(x != 0.0f) {
+        led.clear();
+        active_led ^= 0x01; 
+    }
+    
+    if(y != 0.0f)
+        brightness[active_led] = constrain(brightness[active_led] + y * 0.5f, 0.0f, 1.0f);
+    
+    if(x || y)
+        update_color();
+}
+```
+
+Mittels ```attatchInterrupt(INT_PIN, FUNC, MODE)``` wird ein Interrupt an einem Pin implementiert. INT_PIN muss die
+interne Bezeichnung des Pins sein, diese kann mittels ```digitalPinToInterrupt(PIN_NR)``` leicht ermittelt werden. FUNC
+stellt eine Callback-Funktion dar, die ausgeführt wird, sobald die Interrupt-Bedingung an dem Pin erfüllt ist. Die Funktion
+darf keine Parameter erhalten und keinen Rückgabewert haben (also ```void func()```). Zuletzt gibt MODE die Interruptbedingung
+an. Mögliche vordefinierte Werte sind: LOW - Pin ist low, CHANGE - Spannung hat sich geändert, RISING - Rising Edge, FALLING - Falling Edge.
+
+Da wir jetzt an 2 Stellen im Code die Farbe updaten müssen, wurde der entsprechende Code in die Funktion ```update_color()```
+verschoben: Dies ist konform mit dem "DRY"-Paradigma: "Don't Repeat Yourself".
+
+Interrupts sind nützlich, um auf Signale von außen zu reagieren, ohne beständig Rechenzeit auf Überprüfung einer Signaländerung
+verwenden zu müssen.
